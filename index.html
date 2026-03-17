@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drone Tactics</title>
+  <meta name="description" content="Drone Tactics — динамичная игра о дронах, турелях и тактических сражениях." />
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #0d1117;
+      color: #f5f7fa;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .container {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+    .btn-primary {
+      background: #2f81f7;
+      color: white;
+    }
+    .btn-primary:hover { opacity: 0.92; transform: translateY(-1px); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.12); }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(13, 17, 23, 0.75);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+    }
+    .brand {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .menu {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .menu a {
+      color: #c9d1d9;
+      font-size: 14px;
+    }
+    .menu a:hover { color: white; }
+
+    .hero {
+      padding: 72px 0 56px;
+      background:
+        linear-gradient(180deg, rgba(47,129,247,0.18), rgba(13,17,23,0) 45%),
+        radial-gradient(circle at top right, rgba(47,129,247,0.14), transparent 32%);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 32px;
+      align-items: center;
+    }
+    .eyebrow {
+      color: #7ee787;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: 0.4px;
+    }
+    h1 {
+      font-size: clamp(36px, 7vw, 62px);
+      line-height: 1.05;
+      margin: 0 0 18px;
+    }
+    .hero p {
+      color: #c9d1d9;
+      font-size: 18px;
+      max-width: 640px;
+      margin: 0 0 24px;
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+    .badges {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #c9d1d9;
+      font-size: 13px;
+    }
+    .hero-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 14px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.28);
+    }
+    .hero-card img {
+      border-radius: 18px;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    section {
+      padding: 70px 0;
+    }
+    .section-title {
+      font-size: clamp(28px, 5vw, 40px);
+      margin: 0 0 10px;
+    }
+    .section-subtitle {
+      color: #9ba6b2;
+      margin: 0 0 28px;
+      max-width: 720px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .card {
+      background: #161b22;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 22px;
+    }
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+    .card p {
+      margin: 0;
+      color: #b7c0ca;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .gallery figure {
+      margin: 0;
+      background: #161b22;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    .gallery img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+    .gallery figcaption {
+      padding: 12px 14px;
+      color: #c9d1d9;
+      font-size: 14px;
+    }
+
+    .cta {
+      text-align: center;
+      padding: 36px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(47,129,247,0.18), rgba(47,129,247,0.08));
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .cta p {
+      color: #d7dee5;
+      max-width: 700px;
+      margin: 0 auto 18px;
+    }
+
+    footer {
+      padding: 26px 0 40px;
+      color: #8b949e;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .features,
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+      .hero {
+        padding-top: 48px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a href="#top" class="brand">Drone Tactics</a>
+      <nav class="menu">
+        <a href="#about">Об игре</a>
+        <a href="#features">Особенности</a>
+        <a href="#gallery">Галерея</a>
+        <a href="#contact">Контакты</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Тактический экшен про дроны</div>
+          <h1>Drone Tactics</h1>
+          <p>
+            Динамичная игра о современных дронах, турелях и тактических решениях.
+            Управляй боевыми машинами, выбирай стратегию и выживай в напряжённых сражениях.
+          </p>
+          <div class="actions">
+            <a class="btn btn-primary" href="#contact">Связаться</a>
+            <a class="btn btn-secondary" href="#gallery">Скриншоты</a>
+          </div>
+          <div class="badges">
+            <span class="badge">iOS</span>
+            <span class="badge">Android</span>
+            <span class="badge">UE5</span>
+            <span class="badge">Инди-разработка</span>
+          </div>
+        </div>
+        <div class="hero-card">
+          <img src="images/hero.jpg" alt="Главный скриншот игры Drone Tactics" />
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="container">
+        <h2 class="section-title">О проекте</h2>
+        <p class="section-subtitle">
+          Это одностраничный сайт-визитка для игры. Его можно использовать как сайт разработчика,
+          добавить в Google Play / App Store и разместить рядом файл <strong>app-ads.txt</strong> для AdMob.
+        </p>
+        <div class="features">
+          <div class="card">
+            <h3>Быстрые сражения</h3>
+            <p>Короткие и напряжённые игровые сессии с акцентом на реакцию, тактику и выбор цели.</p>
+          </div>
+          <div class="card">
+            <h3>Разные типы дронов</h3>
+            <p>FPV-дроны, ударные платформы и особые юниты со своими сильными сторонами.</p>
+          </div>
+          <div class="card">
+            <h3>Турели и оборона</h3>
+            <p>Используй разные защитные системы, продумывай позиции и строй собственную стратегию.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="container">
+        <h2 class="section-title">Особенности</h2>
+        <p class="section-subtitle">
+          Замени этот текст своими реальными особенностями игры, чтобы страница выглядела как полноценная презентация проекта.
+        </p>
+        <div class="features">
+          <div class="card">
+            <h3>Современный визуал</h3>
+            <p>Мрачная атмосфера, эффекты взрывов, трассеры, дым и кинематографичные сцены боя.</p>
+          </div>
+          <div class="card">
+            <h3>Прокачка и прогресс</h3>
+            <p>Открывай новые инструменты, усиливай свою тактику и адаптируйся к разным угрозам.</p>
+          </div>
+          <div class="card">
+            <h3>Мобильная оптимизация</h3>
+            <p>Проект создаётся с учётом производительности и комфортной игры на телефонах и планшетах.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery">
+      <div class="container">
+        <h2 class="section-title">Галерея</h2>
+        <p class="section-subtitle">
+          Положи свои изображения в папку <strong>images</strong> и замени файлы ниже на реальные скриншоты игры.
+        </p>
+        <div class="gallery">
+          <figure>
+            <img src="images/screen1.jpg" alt="Скриншот 1" />
+            <figcaption>Игровой процесс и боевые сцены.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/screen2.jpg" alt="Скриншот 2" />
+            <figcaption>Разные юниты, эффекты и окружение.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/screen3.jpg" alt="Скриншот 3" />
+            <figcaption>Тактические решения в напряжённых миссиях.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="cta">
+          <h2 class="section-title">Контакты</h2>
+          <p>
+            Здесь можно разместить почту разработчика, ссылку на Google Play, App Store, YouTube или соцсети.
+            Этого достаточно для простой и аккуратной страницы-визитки.
+          </p>
+          <div class="actions" style="justify-content:center; margin-bottom:0;">
+            <a class="btn btn-primary" href="mailto:your@email.com">your@email.com</a>
+            <a class="btn btn-secondary" href="#top">Наверх</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <div>© 2026 Drone Tactics</div>
+      <div>Indie game project</div>
+    </div>
+  </footer>
+</body>
+</html>
